@@ -41,7 +41,7 @@ Berikut adalah widget-widget yang saya gunakan:
 - Dari file main.dart, pindahkan class MyHomePage dan class _MyHomePageState ke file menu.dart. Lalu pada file menu.dart saya melakukan import import 'package:traveliomob/menu.dart';
 
 - Setelah itu pada menu.dart saya mengubah sifat widget halaman dari stateful menjadi stateless dan menambahkan widget-widget seperti teks dan card sebagai berikut:
-
+```dart
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -153,8 +153,10 @@ class ShopCard extends StatelessWidget {
     );
   }
 }
+```
 
 <h1>BONUS</h1>
+Implementasi warna untuk tiap tombol
 
 <summary>Tugas 2</summary>
 
