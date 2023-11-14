@@ -156,4 +156,7 @@ class ShopCard extends StatelessWidget {
 
 <h1>BONUS</h1>
 
+<summary>Tugas 2</summary>
+
+
 </details>
