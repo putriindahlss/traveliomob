@@ -158,7 +158,6 @@ class ShopCard extends StatelessWidget {
 <h1>BONUS</h1>
 Implementasi warna untuk tiap tombol
 
-<summary>Tugas 2</summary>
-
+[![message-Image-1699409851069.jpg](https://i.ibb.co/hDbP8Zk/message-Image-1699409851069.jpg)](https://ibb.co/MMrYNGb)
 
 </details>
