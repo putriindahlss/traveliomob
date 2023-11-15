@@ -160,7 +160,9 @@ Implementasi warna untuk tiap tombol
 
 [![message-Image-1699409851069.jpg](https://i.ibb.co/hDbP8Zk/message-Image-1699409851069.jpg)](https://ibb.co/MMrYNGb)
 
+</details>
 
+<details>
 <summary>Tugas 2</summary>
 <h1>1. Jelaskan perbedaan antara Navigator.push() dan Navigator.pushReplacement(), disertai dengan contoh mengenai penggunaan kedua metode tersebut yang tepat!</h1>
 
@@ -250,7 +252,7 @@ class LeftDrawer extends StatelessWidget {
               ],
             ),
           ),
-          // OK TODO: Bagian routing
+          //Bagian routing
           ListTile(
             leading: const Icon(Icons.home_outlined),
             title: const Text('Halaman Utama'),
@@ -553,5 +555,4 @@ class ShopCard extends StatelessWidget {
   }
 }
 ```
-
 </details>
