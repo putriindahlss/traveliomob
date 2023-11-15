@@ -160,4 +160,398 @@ Implementasi warna untuk tiap tombol
 
 [![message-Image-1699409851069.jpg](https://i.ibb.co/hDbP8Zk/message-Image-1699409851069.jpg)](https://ibb.co/MMrYNGb)
 
+
+<summary>Tugas 2</summary>
+<h1>1. Jelaskan perbedaan antara Navigator.push() dan Navigator.pushReplacement(), disertai dengan contoh mengenai penggunaan kedua metode tersebut yang tepat!</h1>
+
+Navigator.push() dan Navigator.pushReplacement() adalah  metode dalam Flutter untuk navigasi antar halaman (route) di aplikasi. Perbedaannya adalah:
+
+- Navigator.push(): untuk menavigasi ke halaman baru tanpa menggantikan halaman saat ini di tumpukan navigasi. Ketika pengguna menekan tombol kembali, aplikasi akan kembali ke halaman sebelumnya. Navigator.push() berfungsi ketika ingin menunjukkan halaman tambahan. 
+
+- Navigator.pushReplacement(): untuk menavigasi ke halaman baru dan menggantikan halaman saat ini. Jadi, halaman saat ini akan dihapus dari tumpukan navigasi. Ketika pengguna menekan tombol kembali, aplikasi tidak akan kembali ke halaman sebelumnya, tetapi ke halaman sebelum halaman tersebut. 
+
+Misalnya, kalau memiliki tiga halaman (X, Y, dan Z). Kita ada di halaman X dan menggunakan Navigator.push() untuk menuju halaman Y, lalu dengan Navigator.pushReplacement() menuju Z. Kalau tekan tombol kembali, kita akan kembali ke halaman X, bukan halaman Y, karena halaman Y telah digantikan oleh halaman Z.
+
+<h1>2. Jelaskan masing-masing layout widget pada Flutter dan konteks penggunaannya masing-masing!</h1>
+
+Flutter menyediakan berbagai widget layout untuk mengatur tata letak interface pengguna. Contohnya:
+
+- Container: menggabungkan penempatan dan widget lain dalam satu kotak.
+- Row dan Column: menyusun widget atau komponen-komponen UI, baik secara horizontal (Row) maupun vertikal (Column).
+- ListView: Widget scrolling yang paling umum digunakan. Menampilkan elemen yang dapat di-scroll.
+- Stack: menumpuk beberapa elemen satu sama lain.
+- GridView: mengimplementasikan komponen daftar grid. 
+- Padding: Widget yang memberikan padding pada elemennya.
+- Expanded: Widget yang memperluas elemen Row, Column, atau Flex.
+
+<h1>3. Sebutkan apa saja elemen input pada form yang kamu pakai pada tugas kali ini dan jelaskan mengapa kamu menggunakan elemen input tersebut!</h1>
+
+Ada dua elemen input pada form, yaitu:
+
+- TextFormField: untuk input teks. Elemen ini digunakan untuk memasukkan "Nama Produk" dan "Amount". TextFormField di sini dilengkapi dengan validator untuk memastikan bahwa field tidak boleh kosong dan untuk field "Amount", nilai yang dimasukkan harus angka. TextFormField digunakan karena aplikasi membutuhkan input berupa teks dari pengguna
+
+- ElevatedButton: sebagai tombol submit. Ketika tombol ini ditekan, maka akan memeriksa apakah semua field telah diisi dengan benar melalui _formKey.currentState!.validate(). Jika validasi berhasil, maka akan menampilkan dialog bahwa produk berhasil tersimpan. ElevatedButton digunakan untuk melakukan aksi (dalam hal ini, validasi dan penyimpanan data) ketika ditekan.
+
+<h1>4. Bagaimana penerapan clean architecture pada aplikasi Flutter?</h1>
+
+Clean Architecture pada aplikasi Flutter adalah pola arsitektur yang membantu dalam menyusun kode yang terstruktur. Berikut langkah untuk menerapkannya:
+
+- Membuat lapisan domain sebagai inti dari aplikasi yang berisi logika bisnis dan model data.
+- Menerapkan lapisan aplikasi yang mengimplementasikan kasus penggunaan aplikasi dan menjembatani lapisan infrastruktur dan presentasi.
+- Mengatur lapisan infrastruktur yang berurusan dengan interaksi dengan dunia luar termasuk database, server web, interface pengguna.
+- Membuat lapisan presentasi yang berisi kode yang merender interface pengguna di mana permintaan dibuat dan respons dikembalikan.
+
+<h1>5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial)</h1>
+
+a. Menambah drawer menu dengan membuat berkas baru bernama left_drawer.dart dalam direktori widgets, lalu tambahkan kode untuk membuat drawer menu dengan navigasi ke halaman-halaman tertentu, seperti MyHomePage dan ShopFormPage.
+
+```dart
+//Implement this library.
+import 'package:flutter/material.dart';
+import 'package:traveliomob/screens/menu.dart';
+
+//Impor halaman ShopFormPage jika sudah dibuat
+import 'package:traveliomob/screens/shoplist_form.dart';
+
+class LeftDrawer extends StatelessWidget {
+  const LeftDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: [
+          const DrawerHeader(
+            //Bagian drawer header
+            decoration: BoxDecoration(
+              color: Colors.indigo,
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Travelio Mobile',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Padding(padding: EdgeInsets.all(10)),
+                Text("Catat seluruh keperluan belanjamu di sini!",
+                    //Tambahkan gaya teks dengan center alignment, font ukuran 15, warna putih, dan weight biasa
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal,
+                    ),
+                ),
+              ],
+            ),
+          ),
+          // OK TODO: Bagian routing
+          ListTile(
+            leading: const Icon(Icons.home_outlined),
+            title: const Text('Halaman Utama'),
+            // Bagian redirection ke MyHomePage
+            onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(),
+                  ));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.add_shopping_cart),
+            title: const Text('Tambah Produk'),
+            // Bagian redirection ke ShopFormPage
+            onTap: () {
+              /*
+              Buatlah routing ke ShopFormPage di sini,
+              setelah halaman ShopFormPage sudah dibuat.
+              */
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ShopFormPage(),
+                )
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+b. Menambah Form dan Elemen Input dengan membuat berkas baru bernama shoplist_form.dart, lalu tambahkan variabel _formKey sebagai GlobalKey untuk mengelola state form, implementasikan TextFormField untuk menerima input nama produk, jumlah, dan deskripsi. Lalu gunakan Padding dan Column untuk mengatur tata letak elemen.
+
+```dart
+import 'package:flutter/material.dart';
+// Impor drawer yang sudah dibuat sebelumnya
+import 'package:traveliomob/widgets/left_drawer.dart';
+
+class ShopFormPage extends StatefulWidget {
+  const ShopFormPage({super.key});
+
+  @override
+  State<ShopFormPage> createState() => _ShopFormPageState();
+}
+
+class _ShopFormPageState extends State<ShopFormPage> {
+  final _formKey = GlobalKey<FormState>();
+  String _name = "";
+  int _price = 0;
+  String _description = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            'Form Tambah Produk',
+          ),
+        ),
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
+      ),
+      //Tambahkan drawer yang sudah dibuat di sini
+      drawer: const LeftDrawer(),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: "Nama Produk",
+                    labelText: "Nama Produk",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _name = value!;
+                    });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return "Nama tidak boleh kosong!";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: "Harga",
+                    labelText: "Harga",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  // OK TODO: Tambahkan variabel yang sesuai
+                  onChanged: (String? value) {
+                    setState(() {
+                      _price = int.parse(value!);
+                    });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return "Harga tidak boleh kosong!";
+                    }
+                    if (int.tryParse(value) == null) {
+                      return "Harga harus berupa angka!";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: "Deskripsi",
+                    labelText: "Deskripsi",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      // OK TODO: Tambahkan variabel yang sesuai
+                      _description = value!;
+                    });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return "Deskripsi tidak boleh kosong!";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.indigo),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Produk berhasil tersimpan'),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Nama: $_name'),
+                                    // OK TODO: Munculkan value-value lainnya
+                                    Text('Harga: $_price'),
+                                    Text('Deskripsi: $_description'),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        _formKey.currentState!.reset();
+                      }
+
+                    },
+                    child: const Text(
+                      "Save",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ]
+          ),  
+        ),
+      ),
+    );
+  }
+}
+```
+
+c. Memunculkan data dengan showDialog() untuk menampilkan AlertDialog ketika tombol "Save" ditekan.
+
+```dart
+ if (_formKey.currentState!.validate()) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Produk berhasil tersimpan'),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Nama: $_name'),
+                                    
+                                    Text('Harga: $_price'),
+                                    Text('Deskripsi: $_description'),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        _formKey.currentState!.reset();
+                      }
+```
+
+d. Menambah fitur navigasi (Navigator.push()) pada widget ShopItem di berkas menu.dart. Sesuaikan navigasi ke halaman ShopFormPage.
+
+```dart
+class ShopCard extends StatelessWidget {
+  final ShopItem item;
+
+  const ShopCard(this.item, {super.key}); // Constructor
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: item.color,
+      child: InkWell(
+        // Area responsive terhadap sentuhan
+        onTap: () {
+          // Memunculkan SnackBar ketika diklik
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(
+                content: Text("Kamu telah menekan tombol ${item.name}!")));
+
+          // Navigate ke route yang sesuai (tergantung jenis tombol)
+          if (item.name == "Tambah Item") {
+            //Gunakan Navigator.push untuk melakukan navigasi ke MaterialPageRoute yang mencakup ShopFormPage.
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ShopFormPage()),
+            );
+          }
+        },
+        child: Container(
+          // Container untuk menyimpan Icon dan Text
+          padding: const EdgeInsets.all(8),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  item.icon,
+                  color: Colors.white,
+                  size: 30.0,
+                ),
+                const Padding(padding: EdgeInsets.all(3)),
+                Text(
+                  item.name,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
 </details>
