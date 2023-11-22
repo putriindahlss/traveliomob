@@ -1,3 +1,21 @@
+<<<<<<< HEAD
+# traveliomob
+
+A new Flutter project.
+
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
+=======
 <details>
 <summary>Tugas 7</summary>
 
@@ -556,6 +574,7 @@ class ShopCard extends StatelessWidget {
 }
 ```
 </details>
+<<<<<<< HEAD
 
 
 <details>
@@ -654,3 +673,6 @@ d. Implementasi Fitur Logout
 - Menjalankan aplikasi
 
 </details>
+=======
+>>>>>>> d02c8812c994559236f7898a94c19bc4efb8be36
+>>>>>>> 98c1001dcc8fe94e4a1ee2d0b0aa7a6cf5ae59e1
