@@ -1,21 +1,39 @@
+// Importing necessary packages for Flutter and custom screens.
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:traveliomob/screens/list_product.dart';
 import 'package:traveliomob/screens/login.dart';
 import 'package:traveliomob/screens/shoplist_form.dart';
-import 'package:provider/provider.dart';
 
+// Defining a class to represent items in the shop.
 class ShopItem {
   final String name;
   final IconData icon;
   final Color color;
+
+  // Constructor for the ShopItem class.
   ShopItem(this.name, this.icon, this.color);
 }
 
+// Defining a class to represent individual items in the shop.
+class Items {
+  final String name;
+  final int price;
+  final String description;
+
+  // Constructor for the Items class.
+  Items({required this.name, required this.price, required this.description});
+}
+
+// A stateless widget representing a card in the shop.
 class ShopCard extends StatelessWidget {
   final ShopItem item;
 
-  const ShopCard(this.item, {super.key}); // Constructor
+  // Constructor for the ShopCard class.
+  const ShopCard(this.item, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,33 +41,30 @@ class ShopCard extends StatelessWidget {
     return Material(
       color: item.color,
       child: InkWell(
-        // Area responsive terhadap sentuhan
         onTap: () async {
-          // Memunculkan SnackBar ketika diklik
+          // Displaying a SnackBar when the card is tapped.
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
-                content: Text("Kamu telah menekan tombol ${item.name}!")));
+                content: Text("You have pressed the ${item.name} button!")));
 
-          // Navigate ke route yang sesuai (tergantung jenis tombol)
-          if (item.name == "Tambah Item") {
-            // OK TODO: Gunakan Navigator.push untuk melakukan navigasi ke MaterialPageRoute yang mencakup ShopFormPage.
+          // Navigating to the appropriate route based on the button pressed.
+          if (item.name == "Add an Item") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ShopFormPage()),
+              MaterialPageRoute(builder: (context) => const ShopFormPage()),
             );
-          } else if (item.name == "Lihat Produk") {
-              Navigator.push(context,
+          } else if (item.name == "Show Items") {
+            Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const ProductPage()));
           } else if (item.name == "Logout") {
-            final response = await request.logout(
-                // OK TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-                "https://putri-indah22-tutorial.pbp.cs.ui.ac.id/");
+            final response =
+                await request.logout("http://127.0.0.1:8001/auth/logout/");
             String message = response["message"];
             if (response['status']) {
               String uname = response["username"];
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("$message Sampai jumpa, $uname."),
+                content: Text("$message Goodbye, $uname."),
               ));
               Navigator.pushReplacement(
                 context,
@@ -63,7 +78,6 @@ class ShopCard extends StatelessWidget {
           }
         },
         child: Container(
-          // Container untuk menyimpan Icon dan Text
           padding: const EdgeInsets.all(8),
           child: Center(
             child: Column(

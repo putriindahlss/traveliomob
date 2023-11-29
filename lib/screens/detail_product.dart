@@ -1,43 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:traveliomob/models/product.dart';
 
-
 class DetailProductPage extends StatelessWidget {
-    final Product product;
+  // The product being displayed on this page
+  final Product product;
 
-    const DetailProductPage({Key? key, required this.product}) : super(key: key);
+  // Constructor to initialize the DetailProductPage with a product
+  const DetailProductPage({Key? key, required this.product}) : super(key: key);
 
-    @override
-    Widget build(BuildContext context) {
-        return Scaffold(
-            appBar: AppBar(
-                title: Text(product.fields.name),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        // Setting the title of the app bar to the product name
+        title: Text(product.fields.name),
+        backgroundColor: Colors.pink,
+        foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // Displaying the product name with specified style
+            Text(
+              product.fields.name,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            body: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                        Text(
-                            product.fields.name,
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                            ),
-                        ),
-                        SizedBox(height: 20),
-                        Text('Amount: ${product.fields.price}'),
-                        SizedBox(height: 20),
-                        Text('Description: ${product.fields.description}'),
-                    ],
-                ),
-            ),
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                    Navigator.pop(context);
-                },
-                child: Icon(Icons.arrow_back),
-            ),
-        );
-    }
+            const SizedBox(height: 20),
+            // Displaying the product price
+            Text('Price: ${product.fields.price}'),
+            const SizedBox(height: 20),
+            // Displaying the product description
+            Text('Description: ${product.fields.description}'),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        // Navigating back when the FAB is pressed
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        backgroundColor: Colors.pink,
+        foregroundColor: Colors.white,
+        // Adding an arrow back icon to the FAB
+        child: const Icon(Icons.arrow_back),
+      ),
+    );
+  }
 }

@@ -1,66 +1,72 @@
+// Importing necessary packages for Flutter and custom widgets.
 import 'package:flutter/material.dart';
 import 'package:traveliomob/widgets/left_drawer.dart';
 import 'package:traveliomob/widgets/shop_card.dart';
 
-
+// A StatelessWidget representing the main page of the ScoobyMart application.
 class MyHomePage extends StatelessWidget {
-    MyHomePage({Key? key}) : super(key: key);
+  // Constructor for the MyHomePage class.
+  MyHomePage({Key? key}) : super(key: key);
 
-    final List<ShopItem> items = [
-        ShopItem("Lihat Item", Icons.checklist, Colors.cyan),
-        ShopItem("Tambah Item", Icons.add_shopping_cart, Colors.blueGrey),
-        ShopItem("Logout", Icons.logout, Colors.cyan),
-    ];
+  // List of ShopItem objects representing menu items.
+  final List<ShopItem> items = [
+    ShopItem("Show Items", Icons.checklist, Colors.pink),
+    ShopItem("Add an Item", Icons.add_shopping_cart, Colors.lightGreen),
+    ShopItem("Logout", Icons.logout, Colors.blue),
+  ];
 
-    @override
-    Widget build(BuildContext context) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'Traveliomob',
-            ),
-            backgroundColor: Color.fromARGB(255, 181, 63, 63),
-            foregroundColor: Colors.white,
-            ),
-              
-            drawer: const LeftDrawer(),
-          body: SingleChildScrollView(
-            // Widget wrapper yang dapat discroll
-            child: Padding(
-              padding: const EdgeInsets.all(10.0), // Set padding dari halaman
-              child: Column(
-                // Widget untuk menampilkan children secara vertikal
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    // Widget Text untuk menampilkan tulisan dengan alignment center dan style yang sesuai
-                    child: Text(
-                      'Traveliomob', // Text yang menandakan toko
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+  @override
+  Widget build(BuildContext context) {
+    // Building the scaffold for the main page.
+    return Scaffold(
+      // Setting up the app bar with a title and styling.
+      appBar: AppBar(
+        title: const Text(
+          'ScoobyMart',
+        ),
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
+      ),
+
+      // Including the LeftDrawer widget for navigation.
+      drawer: const LeftDrawer(),
+
+      // Wrapping the body in a SingleChildScrollView for scrolling.
+      body: SingleChildScrollView(
+        // Padding to provide space around the content.
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: <Widget>[
+              // Text widget welcoming the user to ScoobyMart.
+              const Padding(
+                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: Text(
+                  'Welcome to ScoobyMart!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
                   ),
-                  // Grid layout
-                  GridView.count(
-                    // Container pada card kita.
-                    primary: true,
-                    padding: const EdgeInsets.all(20),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 3,
-                    shrinkWrap: true,
-                    children: items.map((ShopItem item) {
-                      // Iterasi untuk setiap item
-                      return ShopCard(item);
-                    }).toList(),
-                  ),
-                ],
+                ),
               ),
-            ),
+
+              // GridView displaying menu items using ShopCard widget.
+              GridView.count(
+                primary: true,
+                padding: const EdgeInsets.all(20),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                crossAxisCount: 3,
+                shrinkWrap: true,
+                children: items.map((ShopItem item) {
+                  return ShopCard(item);
+                }).toList(),
+              ),
+            ],
           ),
-        );
-    }
+        ),
+      ),
+    );
+  }
 }
