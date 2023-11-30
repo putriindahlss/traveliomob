@@ -21,11 +21,11 @@ class ShopItem {
 // Defining a class to represent individual items in the shop.
 class Items {
   final String name;
-  final int price;
+  final int amount;
   final String description;
 
   // Constructor for the Items class.
-  Items({required this.name, required this.price, required this.description});
+  Items({required this.name, required this.amount, required this.description});
 }
 
 // A stateless widget representing a card in the shop.

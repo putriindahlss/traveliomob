@@ -31,8 +31,8 @@ class DetailProductPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Displaying the product price
-            Text('Price: ${product.fields.price}'),
+            // Displaying the product amount
+            Text('Amount: ${product.fields.amount}'),
             const SizedBox(height: 20),
             // Displaying the product description
             Text('Description: ${product.fields.description}'),

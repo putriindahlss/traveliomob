@@ -22,7 +22,7 @@ class MyHomePage extends StatelessWidget {
       // Setting up the app bar with a title and styling.
       appBar: AppBar(
         title: const Text(
-          'ScoobyMart',
+          'TravelioMob',
         ),
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
@@ -42,7 +42,7 @@ class MyHomePage extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: Text(
-                  'Welcome to ScoobyMart!',
+                  'Welcome to TravelioMob!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,
