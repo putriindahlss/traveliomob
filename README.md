@@ -622,36 +622,405 @@ a. Integrasi Autentikasi Django-Flutter
 
 - Django Setup:
 
-1. Membuat django-app bernama "authentication" pada proyek Django.
-2. Menambahkan "authentication" ke INSTALLED_APPS di settings.py.
-3. Menginstall library django-cors-headers dengan perintah pip install django-cors-headers.
-4. Menambahkan corsheaders ke INSTALLED_APPS dan middleware pada settings.py.
-5. Mengatur variabel CORS dan keamanan pada settings.py.
-6. Membuat metode view untuk login di authentication/views.py.
-7. Membuat file urls.py di folder authentication dan tambahkan URL routing.
-8. Membuat path 'auth/' pada urls.py di proyek utama.
+Langkah 1. Membuat django-app bernama "authentication" pada proyek Django. Lalu menambahkan "authentication" ke INSTALLED_APPS di settings.py. Lalu, saya juga menjalankan perintah pip install django-cors-headers untuk menginstal library yang dibutuhkan. Kemudian, saya menambahkan authentication dan corsheaders ke INSTALLED_APPS pada main project settings.py aplikasi Django. Saya juga menambahkan corsheaders.middleware.CorsMiddleware pada main project settings.py aplikasi Django.
 
-- Flutter Setup:
+Langkah 2. Membuat fungsi login di authentication/views.py
 
-1. Menginstall package Flutter yang disediakan oleh tim asisten dosen.
-2. Memodifikasi root widget untuk menyediakan CookieRequest ke semua child widgets dengan menggunakan Provider.
-3. Membuat file login.dart di folder screens dan isi dengan kode untuk halaman login.
+```python
+from django.shortcuts import render
+from django.contrib.auth import authenticate, login as auth_login
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import logout as auth_logout
 
-b. Pembuatan Model Kustom
-- Dengan menggunakan website Quicktype untuk membuat model Dart dari data JSON. Pertama membuat file product.dart di folder lib/models dan tempel kode dari Quicktype, lalu menerapkan Fetch Data dari Django ke Flutter dengan menambahkan dependency HTTP dengan perintah flutter pub add http.
+@csrf_exempt
+def login(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            auth_login(request, user)
+            # Status login sukses.
+            return JsonResponse({
+                "username": user.username,
+                "status": True,
+                "message": "Login sukses!"
+                # Tambahkan data lainnya jika ingin mengirim data ke Flutter.
+            }, status=200)
+        else:
+            return JsonResponse({
+                "status": False,
+                "message": "Login gagal, akun dinonaktifkan."
+            }, status=401)
 
-- Kemudian menambahkan izin internet pada file AndroidManifest.xml., lalu membuat file list_product.dart di folder lib/screens untuk menampilkan produk dari Django.
+    else:
+        return JsonResponse({
+            "status": False,
+            "message": "Login gagal, periksa kembali email atau kata sandi."
+        }, status=401)
+```
 
-- Menghubungkan halaman list_product.dart dengan CookieRequest.
+Lalu membuat file urls.py di authentication dan menambahkan:
 
-c. Integrasi Form Flutter dengan Layanan Django
-- Menambahkan fungsi view di Django untuk membuat produk baru, lalu tambahkan path baru di urls.py untuk fungsi view tersebut.
-- Menghubungkan halaman shoplist_form.dart dengan CookieRequest, lalu mengubah perintah onPressed untuk menambahkan produk baru.
-- Menjalankan aplikasi 
+```python
+from django.urls import path
+from authentication.views import login
 
-d. Implementasi Fitur Logout
-- Membuat metode view untuk logout di authentication/views.py, lalu tambahkan path baru di authentication/urls.py untuk fungsi logout.
-- Pada Flutter, tambahkan fungsi logout pada file shop_card.dart.
-- Menjalankan aplikasi
+app_name = 'authentication'
+
+urlpatterns = [
+    path('login/', login, name='login'),
+]
+```
+
+Langkah 3. Flutter Setup: Menginstall package Flutter yang disediakan oleh tim asisten dosen. Lalu memodifikasi root widget untuk menyediakan CookieRequest ke semua child widgets dengan menggunakan Provider di main.dart.
+
+```dart
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Creating a provider for CookieRequest
+    return Provider(
+      create: (_) {
+        // Creating an instance of CookieRequest
+        CookieRequest request = CookieRequest();
+        return request;
+      },
+      // Defining the root MaterialApp
+      child: MaterialApp(
+        title: 'Flutter App',
+        // Setting the theme
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+          useMaterial3: true,
+        ),
+        // Setting the initial route to the LoginPage
+        home: const LoginPage(),
+      ),
+    );
+  }
+}
+```
+
+Langkah 4. Membuat file login.dart di folder screens dan isi dengan kode untuk halaman login.
+
+```dart
+import 'package:traveliomob/screens/menu.dart';
+import 'package:flutter/material.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+
+// Main function to run the application
+void main() {
+  runApp(const LoginApp());
+}
+
+// Main application widget
+class LoginApp extends StatelessWidget {
+  const LoginApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Building the MaterialApp with the specified theme and initial route
+    return MaterialApp(
+      title: 'Login',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const LoginPage(),
+    );
+  }
+}
+
+// LoginPage widget, which is a StatefulWidget
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+// State class for the LoginPage widget
+class _LoginPageState extends State<LoginPage> {
+  // Controllers for handling user input in text fields
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    // Accessing the CookieRequest provider
+    final request = context.watch<CookieRequest>();
+
+    // Building the main scaffold with app bar and body
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+        backgroundColor: Colors.lightBlue,
+        foregroundColor: Colors.white,
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(16.0),
+        // Column layout for organizing widgets vertically
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Text field for entering the username
+            TextField(
+              controller: _usernameController,
+              decoration: const InputDecoration(
+                labelText: 'Username',
+              ),
+            ),
+            const SizedBox(height: 12.0),
+            // Text field for entering the password (obscured for security)
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: 24.0),
+            // Elevated button for initiating the login process
+            ElevatedButton(
+              onPressed: () async {
+                // Extracting username and password from text fields
+                String username = _usernameController.text;
+                String password = _passwordController.text;
+
+                // Sending login request to Django backend
+                final response =
+                    await request.login("http://127.0.0.1:8001/auth/login/", {
+                  'username': username,
+                  'password': password,
+                });
+
+                // Handling the response based on login success or failure
+                if (request.loggedIn) {
+                  String message = response['message'];
+                  String uname = response['username'];
+                  // Navigating to the home page on successful login
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyHomePage()),
+                  );
+                  // Showing a snackbar with a welcome message
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                        SnackBar(content: Text("$message Welcome, $uname.")));
+                } else {
+                  // Showing an alert dialog on login failure
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Login Failed'),
+                      content: Text(response['message']),
+                      actions: [
+                        TextButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+              child: const Text('Login'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+Langkah 5. Pembuatan Model Kustom
+Dalam membuat model yang menyesuaikan dengan data JSON, saya menggunakan website Quicktype. Pertama, saya mengubah setup name menjadi Item, source type menjadi JSON, dan language menjadi Dart pada website Quickype. Kemudian, saya membuka endpoint JSON yang sudah saya buat sebelumnya, lalu copy data JSON dan paste ke dalam textbox yang tersedia pada Quicktype. Selanjutnya, saya pilih Copy Code dan paste di file baru yang saya buat pada folder lib/models dengan nama product.dart
+
+Langkah 6. Membuat halaman yang berisi daftar semua item.
+Pertama, menjalankan flutter pub add http pada terminal proyek Flutter untuk menambahkan package http. Kemudian, pada file android/app/src/main/AndroidManifest.xml, saya menambahkan kode <uses-permission android:name="android.permission.INTERNET" /> di bawah </application> untuk memperbolehkan akses Internet pada aplikasi Flutter yang sedang dibuat. Lalu, saya melakukan Fetch Data dari Django dengan membuat file baru pada folder lib/screens dengan nama list_product.dart. Kemudian, isi file tersebut dengan kode berikut.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:traveliomob/models/product.dart';
+import 'package:traveliomob/screens/detail_product.dart';
+import 'package:traveliomob/widgets/left_drawer.dart';
+
+class ProductPage extends StatefulWidget {
+  const ProductPage({Key? key}) : super(key: key);
+
+  @override
+  _ProductPageState createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  // Function to fetch product data from the server
+  Future<List<Product>> fetchProduct() async {
+    var url = Uri.parse('http://127.0.0.1:8001/create-flutter/');
+    var response = await http.get(
+      url,
+      headers: {"Content-Type": "application/json"},
+    );
+
+    var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+    List<Product> listItem = [];
+    for (var d in data) {
+      if (d != null) {
+        listItem.add(Product.fromJson(d));
+      }
+    }
+    return listItem;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Building the scaffold for the product page
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Items'),
+        backgroundColor: Colors.pink,
+        foregroundColor: Colors.white,
+      ),
+      // Adding a left drawer to the scaffold
+      drawer: const LeftDrawer(),
+      body: FutureBuilder(
+        // Using FutureBuilder to handle asynchronous data fetching
+        future: fetchProduct(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            // Displaying a loading indicator while data is being fetched
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            if (!snapshot.hasData) {
+              // Displaying a message if no item data is available
+              return const Column(
+                children: [
+                  Text(
+                    "No item data.",
+                    style: TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                  ),
+                  SizedBox(height: 8),
+                ],
+              );
+            } else {
+              // Building a ListView to display the fetched product items
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (_, index) => Column(
+                  children: [
+                    // GestureDetector to navigate to the detail page on tap
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailProductPage(
+                              product: snapshot.data![index],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Displaying the product name with specified style
+                            Text(
+                              "${snapshot.data![index].fields.name}",
+                              style: const TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Adding a Divider after each item except for the last one
+                    if (index < snapshot.data!.length - 1) const Divider(),
+                  ],
+                ),
+              );
+            }
+          }
+        },
+      ),
+    );
+  }
+}
+```
+
+Langkah 10. Membuat Halaman Detail Item di detail_product.dart
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:traveliomob/models/product.dart';
+
+class DetailProductPage extends StatelessWidget {
+  // The product being displayed on this page
+  final Product product;
+
+  // Constructor to initialize the DetailProductPage with a product
+  const DetailProductPage({Key? key, required this.product}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        // Setting the title of the app bar to the product name
+        title: Text(product.fields.name),
+        backgroundColor: Colors.pink,
+        foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // Displaying the product name with specified style
+            Text(
+              product.fields.name,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Displaying the product amount
+            Text('Amount: ${product.fields.amount}'),
+            const SizedBox(height: 20),
+            // Displaying the product description
+            Text('Description: ${product.fields.description}'),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        // Navigating back when the FAB is pressed
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        backgroundColor: Colors.pink,
+        foregroundColor: Colors.white,
+        // Adding an arrow back icon to the FAB
+        child: const Icon(Icons.arrow_back),
+      ),
+    );
+  }
+}
+```
 
 </details>
